@@ -10,19 +10,19 @@ import {
   createProjects,
   getAllProjects,
 } from "../controllers/project.controller.js";
-import { createTask } from "../controllers/task.controller.js";
-
+import {
+  createTask,
+  updateTaskStatus,
+} from "../controllers/task.controller.js";
 
 // Auth routes
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/refresh-token", refreshAccessToken);
 
-
 // Admin routes
 router.get("/all-users", authenticate, authorize("admin"), getAllUsers);
 router.patch("/users/:id/role", authenticate, authorize("admin"), updateRole);
-
 
 // Project routes
 router.post(
@@ -38,8 +38,21 @@ router.get(
   getAllProjects,
 );
 
-
 // Tasks routes
-router.post('/tasks/create-task', authenticate, authorize('admin','manager'), createTask)
+// Create Task
+router.post(
+  "/tasks/create-task",
+  authenticate,
+  authorize("admin", "manager"),
+  createTask,
+);
+
+// Update Task Status
+router.patch(
+  "/tasks/:taskId/status",
+  authenticate,
+  authorize("manager", "member"),
+  updateTaskStatus,
+);
 
 export default router;
