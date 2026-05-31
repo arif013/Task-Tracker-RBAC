@@ -17,9 +17,9 @@ export const authenticate = (req, res, next) => {
       token,
       process.env.JWT_SECRETA
     );
-    console.log(`Decode at authenticate`, decoded)
+    // console.log(`Decode at authenticate`, decoded)
     req.user = decoded;
-
+    // console.log('req.user', req.user)
     next();
   } catch (error) {
     return res.status(401).json({

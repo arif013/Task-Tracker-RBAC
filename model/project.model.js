@@ -4,10 +4,14 @@ const projectSchema = mongoose.Schema(
   {
     title: { type: String, required: true },
     createdBy: {
-      type: String,
-      enum: ["admin", "manager"],
-      default: "manager",
-      required: true,
+      name: { type: String, required: true },
+      email: { type: String, required: true },
+      role: {
+        type: String,
+        enum: ["admin", "manager"],
+        default: "manager",
+        required: true,
+      },
     },
     isActive: { type: Boolean, default: true },
   },

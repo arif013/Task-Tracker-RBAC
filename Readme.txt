@@ -57,5 +57,32 @@ Note: To give only admin access authorize('admin') has been used
 
 
 // WOrking on project routes -> 
-problems: same title should not exist 
+problems: same title should not exist (console.log sametitle -> null)
           manager should also have the CRUD of projects
+
+
+[POST] /api/projects/create-project:
+Creates project with input:
+{
+    "title":"nxtwave",
+    "createdBy":"manager"
+}
+
+Response:
+{
+    "success": true,
+    "message": "Project created successfully",
+    "createProject": {
+        "title": "nxtwave",
+        "createdBy": "manager",
+        "isActive": true,
+        "_id": "6a1c10e98f3c2e44a57651af",
+        "createdAt": "2026-05-31T10:43:53.179Z",
+        "updatedAt": "2026-05-31T10:43:53.179Z",
+        "__v": 0
+    }
+}
+Note: it won't create multiple with the same name
+
+[GET] /api/projects/all-projects:
+It fetches all the projects from the database, only authorized to admin and manager
