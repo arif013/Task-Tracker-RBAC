@@ -12,7 +12,7 @@ const refreshAccessToken = async (req, res) => {
 
     const accessToken = jwt.sign(
       {
-        id: decode._id,
+        id: decode.id,
         email: decode.email,
         name: decode.name,
         role: decode.role,
