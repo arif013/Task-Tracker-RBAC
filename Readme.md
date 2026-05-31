@@ -578,7 +578,7 @@ Clone the repository:
 git clone <repository-url>
 cd task-management-system
 ```
-
+Change the .env.exmple -> .env (add the values i.e. mongodb connection string and two secrets)
 Start all services:
 
 ```bash
