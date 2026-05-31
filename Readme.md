@@ -2,15 +2,50 @@
 
 A role-based Task Management System built with **Node.js**, **Express.js**, **MongoDB**, and **JWT Authentication**.
 
+---
+
+## 📚 Table of Contents
+
+- [Features](#features)
+- [Authentication APIs](#authentication-apis)
+  - [User Registration](#1-user-registration)
+  - [User Login](#2-user-login)
+  - [Refresh Access Token](#3-refresh-access-token)
+
+- [User Management APIs](#user-management-apis)
+  - [Get All Users](#1-get-all-users)
+  - [Update User Role](#2-update-user-role)
+
+- [Project Management APIs](#project-management-apis)
+  - [Create Project](#1-create-project)
+  - [Get All Projects](#2-get-all-projects)
+
+- [Task Management APIs](#task-management-apis)
+  - [Create Task](#1-create-task)
+  - [Update Task Status](#2-update-task-status)
+
+- [Task Workflow](#task-workflow)
+- [Role-Based Access Control (RBAC)](#role-based-access-control-rbac)
+  - [Member](#member)
+  - [Manager](#manager)
+  - [Admin](#admin)
+
+- [Authentication Flow](#authentication-flow)
+- [Tech Stack](#tech-stack)
+- [Future Enhancements](#future-enhancements)
+- [API Base URL](#api-base-url)
+
+---
+
 ## Features
 
-* JWT Authentication (Access Token + Refresh Token)
-* Role-Based Access Control (RBAC)
-* User Management
-* Project Management
-* Task Management
-* Secure Refresh Token Flow
-* Task Status Transition Validation
+- JWT Authentication (Access Token + Refresh Token)
+- Role-Based Access Control (RBAC)
+- User Management
+- Project Management
+- Task Management
+- Secure Refresh Token Flow
+- Task Status Transition Validation
 
 ---
 
@@ -50,9 +85,9 @@ POST /api/signup
 
 ### Notes
 
-* Every newly registered user gets the default role **member**.
-* A **Refresh Token** is automatically stored in an HTTP-only cookie.
-* Access Token should be stored on the client side and sent in the Authorization header.
+- Every newly registered user gets the default role **member**.
+- A **Refresh Token** is automatically stored in an HTTP-only cookie.
+- Access Token should be stored on the client side and sent in the Authorization header.
 
 ---
 
@@ -89,8 +124,8 @@ POST /api/login
 
 ### Notes
 
-* On successful login, a Refresh Token is stored in an HTTP-only cookie.
-* Access Token is returned in the response body.
+- On successful login, a Refresh Token is stored in an HTTP-only cookie.
+- Access Token is returned in the response body.
 
 ---
 
@@ -415,15 +450,15 @@ This ensures a controlled task lifecycle.
 
 Allowed Actions:
 
-* Login
-* Refresh Token
-* View Assigned Tasks (future implementation)
+- Login
+- Refresh Token
+- View Assigned Tasks (future implementation)
 
 Not Allowed:
 
-* Create Projects
-* Create Tasks
-* Manage Users
+- Create Projects
+- Create Tasks
+- Manage Users
 
 ---
 
@@ -431,10 +466,10 @@ Not Allowed:
 
 Allowed Actions:
 
-* Create Projects
-* View Projects
-* Create Tasks
-* Manage Assigned Work
+- Create Projects
+- View Projects
+- Create Tasks
+- Manage Assigned Work
 
 ---
 
@@ -442,12 +477,12 @@ Allowed Actions:
 
 Full System Access:
 
-* Manage Users
-* Promote Members to Managers
-* Create Projects
-* View Projects
-* Create Tasks
-* Manage Entire Platform
+- Manage Users
+- Promote Members to Managers
+- Create Projects
+- View Projects
+- Create Tasks
+- Manage Entire Platform
 
 ---
 
@@ -481,35 +516,35 @@ Continue Using APIs
 
 ### Backend
 
-* Node.js
-* Express.js
-* MongoDB
-* Mongoose
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
 
 ### Authentication
 
-* JWT (Access Token)
-* JWT (Refresh Token)
-* HTTP-Only Cookies
+- JWT (Access Token)
+- JWT (Refresh Token)
+- HTTP-Only Cookies
 
 ### Authorization
 
-* Role-Based Access Control (RBAC)
+- Role-Based Access Control (RBAC)
 
 ---
 
 # Future Enhancements
 
-* Assign multiple users to a task
-* Project analytics dashboard
-* Task comments
-* Activity logs
-* File attachments
-* Email notifications
-* Due dates and reminders
-* Task filtering and search
-* Pagination for users, projects, and tasks
-* Soft delete functionality
+- Assign multiple users to a task
+- Project analytics dashboard
+- Task comments
+- Activity logs
+- File attachments
+- Email notifications
+- Due dates and reminders
+- Task filtering and search
+- Pagination for users, projects, and tasks
+- Soft delete functionality
 
 ---
 
