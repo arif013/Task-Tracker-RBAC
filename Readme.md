@@ -34,7 +34,9 @@ A role-based Task Management System built with **Node.js**, **Express.js**, **Mo
 - [Tech Stack](#tech-stack)
 - [Future Enhancements](#future-enhancements)
 - [API Base URL](#api-base-url)
-
+- [Setup Instructions](#️-setup-instructions)
+- [Caching Strategy & Cache Invalidation](#-caching-strategy--cache-invalidation)
+- [Database Design Decision](#️-database-design-decision)
 ---
 
 ## Features
@@ -422,14 +424,16 @@ TODO
   ↓
 IN_PROGRESS
   ↓
+IN_REVIEW
+  ↓
 DONE
 ```
-
+↓
 ### Valid Transitions
 
 ```text
 TODO → IN_PROGRESS
-IN_PROGRESS → DONE
+IN_PROGRESS → IN_REVIEW
 ```
 
 ### Invalid Transitions
@@ -439,7 +443,7 @@ TODO → DONE ❌
 DONE → TODO ❌
 DONE → IN_PROGRESS ❌
 ```
-
+But BLOCKED can be marked from any open status.
 This ensures a controlled task lifecycle.
 
 ---
@@ -553,3 +557,210 @@ Continue Using APIs
 ```http
 http://localhost:3000/api
 ```
+
+
+
+
+# ⚙️ Setup Instructions
+
+## Prerequisites
+
+Make sure the following are installed:
+
+* Docker
+* Docker Compose
+
+## Running the Application
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
+cd task-management-system
+```
+
+Start all services:
+
+```bash
+docker compose up --build
+```
+
+This command will:
+
+* Start the Node.js backend
+* Start MongoDB
+* Create the required Docker network
+* Configure service communication automatically
+
+The API will be available at:
+
+```text
+http://localhost:3000
+```
+
+To stop all containers:
+
+```bash
+docker compose down
+```
+
+
+---
+
+# 🚀 Caching Strategy & Cache Invalidation
+
+## Caching Strategy
+
+The application primarily serves frequently accessed data such as:
+
+* Projects
+* Users
+* Task Lists
+
+To reduce database load and improve response times, Redis (or an in-memory cache) can be introduced for read-heavy endpoints.
+
+Example cache candidates:
+
+```text
+GET /api/projects/all-projects
+GET /api/all-users
+```
+
+Flow:
+
+1. Client requests data.
+2. Application checks cache first.
+3. If cache hit → return cached data.
+4. If cache miss → fetch from MongoDB.
+5. Store result in cache with a TTL (Time To Live).
+6. Return response to client.
+
+Benefits:
+
+* Reduced MongoDB queries
+* Faster API responses
+* Improved scalability
+
+---
+
+## Cache Invalidation Approach
+
+Cache invalidation occurs whenever data changes.
+
+Examples:
+
+### Project Creation
+
+```text
+POST /api/projects/create-project
+```
+
+After successfully creating a project:
+
+```text
+Invalidate: projects:list
+```
+
+This ensures the next request fetches fresh data from the database.
+
+### User Role Update
+
+```text
+PATCH /api/users/:id/role
+```
+
+After updating a role:
+
+```text
+Invalidate: users:list
+```
+
+### Task Creation/Update
+
+```text
+POST /api/tasks/create-task
+PATCH /api/tasks/:taskId/status
+```
+
+After task modifications:
+
+```text
+Invalidate: tasks:list
+Invalidate: project:<projectId>:tasks
+```
+
+This approach guarantees consistency between cache and database while maintaining high performance.
+
+---
+
+
+# 🗄️ Database Design Decision
+
+## Decision: Store References Instead of Embedding Documents
+
+The Task schema stores references to Users and Projects using ObjectIds.
+
+Example:
+
+```javascript
+{
+  title: String,
+  description: String,
+  assignee: ObjectId,
+  project: ObjectId,
+  createdBy: ObjectId
+}
+```
+
+Instead of embedding complete User or Project information inside each task, references are used.
+
+### Why?
+
+#### 1. Avoid Data Duplication
+
+If a user's name or email changes, it only needs to be updated in one place.
+
+Without references:
+
+```text
+Task A -> User Name: Arif
+Task B -> User Name: Arif
+Task C -> User Name: Arif
+```
+
+A name change would require updating every task document.
+
+With references:
+
+```text
+Task -> UserId
+```
+
+Only the User document changes.
+
+#### 2. Better Scalability
+
+A single project may contain hundreds or thousands of tasks.
+
+Embedding large amounts of related data would increase document size and negatively affect performance.
+
+#### 3. Easier Relationship Management
+
+MongoDB's ObjectId references combined with Mongoose's `populate()` method provide efficient access to related data while maintaining normalized collections.
+
+### Collections
+
+```text
+Users
+ └── userId
+
+Projects
+ └── projectId
+
+Tasks
+ ├── assignee -> userId
+ ├── createdBy -> userId
+ └── project -> projectId
+```
+
+This design keeps the database normalized, scalable, and easier to maintain as the application grows.

@@ -56,4 +56,52 @@ const updateTaskStatus = async (req, res) => {
   });
 };
 
-export { createTask, updateTaskStatus };
+// Fetch tasks depending upon the roles (ADMIN || MANAGER || MEMBER)
+const fetchTasks = async (req, res) => {
+  try {
+    if (req.user.role === "admin") {
+      const allTasks = await Task.find();
+      if (!allTasks) {
+        return res
+          .status(400)
+          .json({ message: "Error while fetching the tasks" });
+      }
+      res.status(200).json({
+        success: true,
+        message: "Fetched all the tasks for admin",
+        allTasks,
+      });
+    } else if (req.user.role === "manager") {
+      const findTasksCreated = await Task.find({ createdBy: req.user.id });
+      if (!findTasksCreated) {
+        return res
+          .status(400)
+          .json({ message: "Error while fetching the tasks" });
+      }
+      res.status(200).json({
+        success: true,
+        message: "Tasks fetched created by manager",
+        findTasksCreated,
+      });
+    } else {
+      const findTasksAssigned = await Task.find({ assignee: req.user.id });
+      if (!findTasksAssigned) {
+        return res
+          .status(400)
+          .json({ message: "Error while fetching the tasks" });
+      }
+      res.status(200).json({
+        success: true,
+        message: "Tasks fetched created for member",
+        findTasksAssigned,
+      });
+    }
+  } catch (err) {
+    console.error("Server error", err);
+    return res
+      .status(500)
+      .json({ message: "Server error while fetching all the tasks" });
+  }
+};
+
+export { createTask, updateTaskStatus, fetchTasks };

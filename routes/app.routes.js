@@ -12,6 +12,7 @@ import {
 } from "../controllers/project.controller.js";
 import {
   createTask,
+  fetchTasks,
   updateTaskStatus,
 } from "../controllers/task.controller.js";
 
@@ -54,5 +55,7 @@ router.patch(
   authorize("manager", "member"),
   updateTaskStatus,
 );
+// View tasks depending upon role
+router.get("/tasks/all-tasks", authenticate, fetchTasks)
 
 export default router;
