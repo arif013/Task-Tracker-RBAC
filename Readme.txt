@@ -46,3 +46,16 @@ Response:
 Works in the following way:
     Checks if refresh-token exists in the cookie -> verifies using jwt.verify() -> Creates a access-token 
 
+
+[GET] /api/all-users:
+This endpoint will only work from admin login and returns all the users
+
+[PATCH] /api/users/:id/role:
+Every default role will be 'member' and admin can promote them to manager by using the above endpoint and replace the :id with real id
+
+Note: To give only admin access authorize('admin') has been used
+
+
+// WOrking on project routes -> 
+problems: same title should not exist 
+          manager should also have the CRUD of projects

@@ -5,12 +5,18 @@ import { login, signup } from "../controllers/auth.controllers.js";
 import refreshAccessToken from "../utils/refreshAccessToken.js";
 import { authenticate } from "../middleware/authenticate.js";
 import { authorize } from "../middleware/authorize.js";
-import { getAllUsers } from "../controllers/admin.controller.js";
+import { getAllUsers, updateRole } from "../controllers/admin.controller.js";
+import { createProjects } from "../controllers/project.controller.js";
 
+// Auth routes
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/refresh-token", refreshAccessToken);
 
+// Admin routes
 router.get("/all-users", authenticate, authorize("admin"), getAllUsers);
+router.patch("/users/:id/role", authenticate, authorize("admin"), updateRole);
 
+// Project routes
+router.post('/create-projects', authenticate, authorize('admin','manager'), createProjects)
 export default router;
